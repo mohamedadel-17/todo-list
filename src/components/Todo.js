@@ -9,12 +9,19 @@ import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 // Hooks
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // Contexts
 import { TodosContext } from "../contexts/todosContext";
+// Components
+import AlertDialog from "./AlertDialog";
 
 export default function TodoList({ todo }) {
-  const { setTodos } = useContext(TodosContext);
+  // Constants
+  const { todos, setTodos } = useContext(TodosContext);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+
+  // Events Handlers
+  // Completed Button Style
   function ButtonActive() {
     if (todo.isCompleted) {
       return {
@@ -31,6 +38,28 @@ export default function TodoList({ todo }) {
       };
     }
   }
+  function handleCheckClick() {
+    setTodos((prevTodos) =>
+      prevTodos.map((t) =>
+        t.id === todo.id ? { ...t, isCompleted: !t.isCompleted } : t
+      )
+    );
+  }
+  // Dialog Handlers
+  function handleDeleteClick() {
+    setShowDeleteDialog(true);
+  }
+  function handleDeleteCancel() {
+    setShowDeleteDialog(false);
+  }
+  function handleDeleteConfirm() {
+    const newTodos = todos.filter((t) => t.id !== todo.id);
+    setTodos(newTodos);
+    // setShowDeleteDialog(false);
+  }
+  // ==== Events Handlers ====
+
+  // JSX
   return (
     <>
       <Card
@@ -64,15 +93,7 @@ export default function TodoList({ todo }) {
               <IconButton
                 className="iconButton"
                 style={ButtonActive()}
-                onClick={() => {
-                  setTodos((prevTodos) =>
-                    prevTodos.map((t) =>
-                      t.id === todo.id
-                        ? { ...t, isCompleted: !t.isCompleted }
-                        : t
-                    )
-                  );
-                }}
+                onClick={handleCheckClick}
               >
                 <CheckIcon />
               </IconButton>
@@ -86,20 +107,28 @@ export default function TodoList({ todo }) {
               >
                 <EditIcon />
               </IconButton>
+              {/* Delete Button */}
               <IconButton
                 className="iconButton"
                 style={{
                   color: "#b23c17",
                   border: "3px solid #b23c17",
                 }}
+                onClick={handleDeleteClick}
               >
                 <DeleteIcon />
               </IconButton>
+              {/* ==== Delete Button ==== */}
             </Grid>
             {/* ==== Buttons ==== */}
           </Grid>
         </CardContent>
       </Card>
+      <AlertDialog
+        open={showDeleteDialog}
+        handleClose={handleDeleteCancel}
+        handleDeleteConfirm={handleDeleteConfirm}
+      />
     </>
   );
 }
