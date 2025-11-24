@@ -13,12 +13,14 @@ import { useContext, useState } from "react";
 // Contexts
 import { TodosContext } from "../contexts/todosContext";
 // Components
-import AlertDialog from "./AlertDialog";
+import AlertDeleteDialog from "./AlertDeleteDialog";
+import AlertEditDialog from "./AlertEditDialog";
 
 export default function TodoList({ todo }) {
   // Constants
   const { todos, setTodos } = useContext(TodosContext);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
 
   // Events Handlers
   // Completed Button Style
@@ -45,7 +47,7 @@ export default function TodoList({ todo }) {
       )
     );
   }
-  // Dialog Handlers
+  // Delete Dialog Handlers
   function handleDeleteClick() {
     setShowDeleteDialog(true);
   }
@@ -56,6 +58,13 @@ export default function TodoList({ todo }) {
     const newTodos = todos.filter((t) => t.id !== todo.id);
     setTodos(newTodos);
     // setShowDeleteDialog(false);
+  }
+  // Edit Dialog Handlers
+  function handleEditClick() {
+    setShowEditDialog(true);
+  }
+  function handleEditCancel() {
+    setShowEditDialog(false);
   }
   // ==== Events Handlers ====
 
@@ -98,15 +107,18 @@ export default function TodoList({ todo }) {
                 <CheckIcon />
               </IconButton>
               {/* ==== Check Button ==== */}
+              {/* Edit Button */}
               <IconButton
                 className="iconButton"
                 style={{
                   color: "#1769aa",
                   border: "3px solid #1769aa",
                 }}
+                onClick={handleEditClick}
               >
                 <EditIcon />
               </IconButton>
+              {/* ==== Edit Button ==== */}
               {/* Delete Button */}
               <IconButton
                 className="iconButton"
@@ -124,10 +136,16 @@ export default function TodoList({ todo }) {
           </Grid>
         </CardContent>
       </Card>
-      <AlertDialog
+      <AlertDeleteDialog
         open={showDeleteDialog}
         handleClose={handleDeleteCancel}
         handleDeleteConfirm={handleDeleteConfirm}
+      />
+      <AlertEditDialog
+        todo={todo}
+        open={showEditDialog}
+        handleEditCancel={handleEditCancel}
+        // handleEditConfirm={handleEditConfirm}
       />
     </>
   );
