@@ -1,3 +1,4 @@
+// Material UI
 import Container from "@mui/material/Container";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
@@ -12,43 +13,17 @@ import TextField from "@mui/material/TextField";
 import Todo from "./Todo";
 // Hooks
 import { useState } from "react";
+import { useContext } from "react";
+// Contexts
+import { TodosContext } from "../contexts/todosContext";
 // Others
 import { v4 as uuidv4 } from "uuid";
 
 export default function TodoList() {
+  const { todos, setTodos } = useContext(TodosContext);
   const [titleInput, setTitleInput] = useState("");
-  const [todos, setTodos] = useState([
-    {
-      id: uuidv4(),
-      title: "First Task",
-      description: "This is my first task",
-      isCompleted: false,
-    },
-    {
-      id: uuidv4(),
-      title: "Second Task",
-      description: "This is my second task",
-      isCompleted: false,
-    },
-    {
-      id: uuidv4(),
-      title: "Third Task",
-      description: "This is my third task",
-      isCompleted: false,
-    },
-  ]);
 
-  function handleCheckClick(id) {
-    setTodos((prevTodos) =>
-      prevTodos.map((t) =>
-        t.id === id ? { ...t, isCompleted: !t.isCompleted } : t
-      )
-    );
-  }
-
-  const todosList = todos.map((todo) => (
-    <Todo key={todo.id} todo={todo} setTodos={setTodos} handleCheckClick={handleCheckClick} />
-  ));
+  const todosList = todos.map((todo) => <Todo key={todo.id} todo={todo} />);
 
   return (
     <Container maxWidth="sm">

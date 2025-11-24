@@ -1,14 +1,20 @@
+// Material UI
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
-// Icons
+// Icons (material UI)
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+// Hooks
+import { useContext } from "react";
+// Contexts
+import { TodosContext } from "../contexts/todosContext";
 
-export default function TodoList({ todo, handleCheckClick }) {
+export default function TodoList({ todo }) {
+  const { setTodos } = useContext(TodosContext);
   function ButtonActive() {
     if (todo.isCompleted) {
       return {
@@ -58,9 +64,15 @@ export default function TodoList({ todo, handleCheckClick }) {
               <IconButton
                 className="iconButton"
                 style={ButtonActive()}
-                onClick={
-                  () => handleCheckClick(todo.id)
-                }
+                onClick={() => {
+                  setTodos((prevTodos) =>
+                    prevTodos.map((t) =>
+                      t.id === todo.id
+                        ? { ...t, isCompleted: !t.isCompleted }
+                        : t
+                    )
+                  );
+                }}
               >
                 <CheckIcon />
               </IconButton>
