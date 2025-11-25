@@ -8,10 +8,10 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-// Hooks
+// Hooks 
 import { useContext, useState } from "react";
-// Contexts
 import { TodosContext } from "../contexts/todosContext";
+import { useSnackBar } from "../contexts/SnackBarContext";
 // Components
 import AlertDeleteDialog from "./AlertDeleteDialog";
 import AlertEditDialog from "./AlertEditDialog";
@@ -19,6 +19,7 @@ import AlertEditDialog from "./AlertEditDialog";
 export default function Todo({ todo }) {
   // Constants
   const { todos, setTodos } = useContext(TodosContext);
+  const { showHideToast } = useSnackBar();
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
 
@@ -67,6 +68,10 @@ export default function Todo({ todo }) {
   function handleEditCancel() {
     setShowEditDialog(false);
   }
+  // SnackBar
+  function openHideToast(message) {
+    showHideToast(message);
+  }
   // ==== Events Handlers ====
 
   // JSX
@@ -103,7 +108,10 @@ export default function Todo({ todo }) {
               <IconButton
                 className="iconButton"
                 style={ButtonActive()}
-                onClick={handleCheckClick}
+                onClick={() => {
+                  handleCheckClick();
+                  !todo.isCompleted ? openHideToast("Note Completed") : openHideToast("Note Uncompleted");
+                }}
               >
                 <CheckIcon />
               </IconButton>

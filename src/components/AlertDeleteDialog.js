@@ -1,38 +1,56 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
-
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import { useSnackBar } from "../contexts/SnackBarContext";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function AlertDeleteDialog({ open, handleClose, handleDeleteConfirm }) {
+export default function AlertDeleteDialog({
+  open,
+  handleClose,
+  handleDeleteConfirm,
+}) {
+  const { showHideToast } = useSnackBar();
+  function openHideToast(message) {
+    showHideToast(message);
+  }
   return (
-      <Dialog
-        open={open}
-        slots={{
-          transition: Transition,
-        }}
-        keepMounted
-        onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
-      >
-        <DialogTitle>{"Are you sure you want to delete this task?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-slide-description" sx={{color: 'red'}}>
-            This action cannot be undone.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Close</Button>
-          <Button onClick={handleDeleteConfirm}>Delete</Button>
-        </DialogActions>
-      </Dialog>
+    <Dialog
+      open={open}
+      slots={{
+        transition: Transition,
+      }}
+      keepMounted
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <DialogTitle>{"Are you sure you want to delete this task?"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText
+          id="alert-dialog-slide-description"
+          sx={{ color: "red" }}
+        >
+          This action cannot be undone.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Close</Button>
+        <Button
+          onClick={() => {
+            handleDeleteConfirm();
+            openHideToast("Task deleted successfully");
+          }}
+        >
+          Delete
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }

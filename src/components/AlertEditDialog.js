@@ -8,6 +8,7 @@ import Slide from "@mui/material/Slide";
 import TextField from "@mui/material/TextField";
 // Hooks
 import { useContext, useState } from "react";
+import { useSnackBar } from "../contexts/SnackBarContext";
 // Contexts
 import { TodosContext } from "../contexts/todosContext";
 
@@ -18,6 +19,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export default function AlertEditDialog({ open, handleEditCancel, todo }) {
   // Constants
   const { todos, setTodos } = useContext(TodosContext);
+  const { showHideToast } = useSnackBar();
+  function openHideToast(message) {
+    showHideToast(message);
+  }
   const [todoUpdate, setTodoUpdate] = useState({
     title: todo.title,
     description: todo.description,
@@ -64,7 +69,7 @@ export default function AlertEditDialog({ open, handleEditCancel, todo }) {
           fullWidth
           variant="standard"
           value={todoUpdate.title}
-          onChange={(e) =>{
+          onChange={(e) => {
             setTodoUpdate({ ...todoUpdate, title: e.target.value });
           }}
         />
@@ -79,14 +84,21 @@ export default function AlertEditDialog({ open, handleEditCancel, todo }) {
           fullWidth
           variant="standard"
           value={todoUpdate.description}
-          onChange={(e) =>{
+          onChange={(e) => {
             setTodoUpdate({ ...todoUpdate, description: e.target.value });
           }}
         />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleEditCancel}>Close</Button>
-        <Button onClick={handleEditConfirm}>Update</Button>
+        <Button
+          onClick={() => {
+            handleEditConfirm();
+            openHideToast("Task Updated Successfully");
+          }}
+        >
+          Update
+        </Button>
       </DialogActions>
     </Dialog>
   );

@@ -13,6 +13,7 @@ import TextField from "@mui/material/TextField";
 import Todo from "./Todo";
 // Hooks
 import { useState, useContext, useEffect, useMemo } from "react";
+import { useSnackBar } from "../contexts/SnackBarContext";
 // Contexts
 import { TodosContext } from "../contexts/todosContext";
 // Others
@@ -20,6 +21,7 @@ import { v4 as uuidv4 } from "uuid";
 
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosContext);
+  const { showHideToast } = useSnackBar();
   const [titleInput, setTitleInput] = useState("");
   const [displayTodosType, setDisplayTodosType] = useState("all");
   const completedTodos = useMemo(() => {
@@ -43,6 +45,11 @@ export default function TodoList() {
 
   function handleDisplayTodosType(event) {
     setDisplayTodosType(event.target.value);
+  }
+
+  // SnackBar 
+  function openHideToast(message){
+      showHideToast(message);
   }
 
   useEffect(() => {
@@ -119,6 +126,7 @@ export default function TodoList() {
                     setTodos(newTodos);
                     localStorage.setItem("todos", JSON.stringify(newTodos));
                     setTitleInput("");
+                    openHideToast("Task added successfully!");
                   }}
                   disabled={titleInput === ""}
                 >
