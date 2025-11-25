@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 // Components
 import Todo from "./Todo";
 // Hooks
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useMemo } from "react";
 // Contexts
 import { TodosContext } from "../contexts/todosContext";
 // Others
@@ -21,24 +21,32 @@ import { v4 as uuidv4 } from "uuid";
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosContext);
   const [titleInput, setTitleInput] = useState("");
-  
   const [displayTodosType, setDisplayTodosType] = useState("all");
-  const completedTodos = todos.filter((todo) => todo.isCompleted);
-  const uncompletedTodos = todos.filter((todo) => !todo.isCompleted);
+  const completedTodos = useMemo(() => {
+    console.log("Completed todos: ");
+    return todos.filter((todo) => todo.isCompleted);
+  }, [todos]);
+  const uncompletedTodos = useMemo(() => {
+    console.log("UnCompleted todos: ");
+
+    return todos.filter((todo) => !todo.isCompleted);
+  }, [todos]);
   let todosToBeRendered = todos;
-  if(displayTodosType === "completed") {
+  if (displayTodosType === "completed") {
     todosToBeRendered = completedTodos;
   } else if (displayTodosType === "uncompleted") {
     todosToBeRendered = uncompletedTodos;
   }
-  const todosList = todosToBeRendered.map((todo) => <Todo key={todo.id} todo={todo} />);
-  
+  const todosList = todosToBeRendered.map((todo) => (
+    <Todo key={todo.id} todo={todo} />
+  ));
+
   function handleDisplayTodosType(event) {
     setDisplayTodosType(event.target.value);
   }
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos")) ?? []; 
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) ?? [];
     setTodos(storedTodos);
   }, []);
 
@@ -50,7 +58,7 @@ export default function TodoList() {
             ToDoList
           </Typography>
           <Divider />
-          {/*//*! Filter Buttons */}
+          {/* Filter Buttons */}
           <ToggleButtonGroup
             exclusive
             aria-label="text alignment"
@@ -112,6 +120,7 @@ export default function TodoList() {
                     localStorage.setItem("todos", JSON.stringify(newTodos));
                     setTitleInput("");
                   }}
+                  disabled={titleInput === ""}
                 >
                   Add Task
                 </Button>

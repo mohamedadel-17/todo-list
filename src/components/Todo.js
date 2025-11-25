@@ -16,7 +16,7 @@ import { TodosContext } from "../contexts/todosContext";
 import AlertDeleteDialog from "./AlertDeleteDialog";
 import AlertEditDialog from "./AlertEditDialog";
 
-export default function TodoList({ todo }) {
+export default function Todo({ todo }) {
   // Constants
   const { todos, setTodos } = useContext(TodosContext);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
