@@ -41,11 +41,11 @@ export default function TodoList({ todo }) {
     }
   }
   function handleCheckClick() {
-    setTodos((prevTodos) =>
-      prevTodos.map((t) =>
-        t.id === todo.id ? { ...t, isCompleted: !t.isCompleted } : t
-      )
+    const newTodos = todos.map((t) =>
+      t.id === todo.id ? { ...t, isCompleted: !t.isCompleted } : t
     );
+    setTodos(newTodos);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   }
   // Delete Dialog Handlers
   function handleDeleteClick() {
@@ -58,6 +58,7 @@ export default function TodoList({ todo }) {
     const newTodos = todos.filter((t) => t.id !== todo.id);
     setTodos(newTodos);
     // setShowDeleteDialog(false);
+    localStorage.setItem("todos", JSON.stringify(newTodos));
   }
   // Edit Dialog Handlers
   function handleEditClick() {

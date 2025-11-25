@@ -35,8 +35,6 @@ const initialTodos = [
 
 function App() {
   const [todos, setTodos] = useState(initialTodos);
-
-
   return (
     <ThemeProvider theme={theme}>
       <div
