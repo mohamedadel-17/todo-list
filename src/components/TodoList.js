@@ -21,7 +21,21 @@ import { v4 as uuidv4 } from "uuid";
 export default function TodoList() {
   const { todos, setTodos } = useContext(TodosContext);
   const [titleInput, setTitleInput] = useState("");
-  const todosList = todos.map((todo) => <Todo key={todo.id} todo={todo} />);
+  
+  const [displayTodosType, setDisplayTodosType] = useState("all");
+  const completedTodos = todos.filter((todo) => todo.isCompleted);
+  const uncompletedTodos = todos.filter((todo) => !todo.isCompleted);
+  let todosToBeRendered = todos;
+  if(displayTodosType === "completed") {
+    todosToBeRendered = completedTodos;
+  } else if (displayTodosType === "uncompleted") {
+    todosToBeRendered = uncompletedTodos;
+  }
+  const todosList = todosToBeRendered.map((todo) => <Todo key={todo.id} todo={todo} />);
+  
+  function handleDisplayTodosType(event) {
+    setDisplayTodosType(event.target.value);
+  }
 
   useEffect(() => {
     const storedTodos = JSON.parse(localStorage.getItem("todos"));
@@ -29,22 +43,24 @@ export default function TodoList() {
   }, []);
 
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="sm" style={{ marginTop: "10vh" }}>
       <Card sx={{ minWidth: 275 }}>
         <CardContent>
           <Typography variant="h5" component="div">
             ToDoList
           </Typography>
           <Divider />
-          {/* Filter Buttons */}
+          {/*//*! Filter Buttons */}
           <ToggleButtonGroup
             exclusive
             aria-label="text alignment"
             style={{ marginTop: "10px" }}
+            value={displayTodosType}
+            onChange={handleDisplayTodosType}
           >
-            <ToggleButton value="left">All</ToggleButton>
-            <ToggleButton value="center">Completed</ToggleButton>
-            <ToggleButton value="right">Uncompleted</ToggleButton>
+            <ToggleButton value="all">All</ToggleButton>
+            <ToggleButton value="completed">Completed</ToggleButton>
+            <ToggleButton value="uncompleted">Uncompleted</ToggleButton>
           </ToggleButtonGroup>
           {/* ==== Filter Buttons ==== */}
 

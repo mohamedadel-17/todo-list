@@ -42,13 +42,14 @@ function App() {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          // alignItems: "center",
           backgroundColor: "#282c34",
           height: "100vh",
         }}
+        
       >
         <TodosContext.Provider value={{ todos, setTodos }}>
-          <TodoList />
+          <TodoList  />
         </TodosContext.Provider>
       </div>
     </ThemeProvider>
