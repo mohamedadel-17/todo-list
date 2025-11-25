@@ -12,29 +12,9 @@ const theme = createTheme({
   },
 });
 
-const initialTodos = [
-  {
-    id: uuidv4(),
-    title: "First Task",
-    description: "This is my first task",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Second Task",
-    description: "This is my second task",
-    isCompleted: false,
-  },
-  {
-    id: uuidv4(),
-    title: "Third Task",
-    description: "This is my third task",
-    isCompleted: false,
-  },
-];
 
 function App() {
-  const [todos, setTodos] = useState(initialTodos);
+  const [todos, setTodos] = useState([]);
   return (
     <ThemeProvider theme={theme}>
       <div

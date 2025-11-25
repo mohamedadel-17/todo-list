@@ -24,7 +24,7 @@ export default function TodoList() {
   const todosList = todos.map((todo) => <Todo key={todo.id} todo={todo} />);
 
   useEffect(() => {
-    const storedTodos = JSON.parse(localStorage.getItem("todos"));
+    const storedTodos = JSON.parse(localStorage.getItem("todos")) ?? []; 
     setTodos(storedTodos);
   }, []);
 
